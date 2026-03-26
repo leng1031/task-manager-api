@@ -28,11 +28,11 @@ public class Task {
 
     private LocalDateTime dueDate;
 
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @PrePersist
     public void prePersist(){
-        this.createAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
         if (this.status == null){
             this.status = TaskStatus.TODO;
         }
