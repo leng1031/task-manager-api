@@ -1,5 +1,7 @@
 package com.xuleng.taskmanager.service;
 
+import com.xuleng.taskmanager.dto.CreateTaskRequest;
+import com.xuleng.taskmanager.dto.TaskResponse;
 import com.xuleng.taskmanager.entity.Task;
 import com.xuleng.taskmanager.entity.TaskStatus;
 import com.xuleng.taskmanager.exception.TaskNotFoundException;
@@ -21,19 +23,41 @@ public class TaskService {
     }
 
     //Create Task
-    public Task createTask(Task task){
-        task.setCreatedAt(LocalDateTime.now());
+    public TaskResponse createTask(CreateTaskRequest request){
+//        task.setCreatedAt(LocalDateTime.now());
+//
+//        if (task.getStatus() == null){
+//            task.setStatus(TaskStatus.TODO);
+//        }
+        Task task = new Task();
+        task.setTitle(request.getTitle());
+        task.setDescription(request.getDescription());
 
-        if (task.getStatus() == null){
-            task.setStatus(TaskStatus.TODO);
-        }
-        return  taskRepository.save(task);
+        Task saved = taskRepository.save(task);
+        return convertToResponse(saved);
+    }
+
+    private TaskResponse convertToResponse(Task task){
+        TaskResponse res = new TaskResponse();
+        res.setId(task.getId());
+        res.setTitle(task.getTitle());
+        res.setDescription(task.getDescription());
+        res.setStatus(task.getStatus());
+        res.setCreateAt(task.getCreatedAt());
+        return res;
     }
 
     //Get all tasks
-    public List<Task> getAllTask(){
-        return taskRepository.findAll();
+//    public List<Task> getAllTask(){
+//        return taskRepository.findAll();
+//    }
+
+    public List<TaskResponse> getAllTask(){
+        return taskRepository.findAll().stream()
+                .map(this::convertToResponse)
+                .toList();
     }
+
 
     //Get task by id
     public Task getTaskById(Long id){

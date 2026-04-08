@@ -1,6 +1,8 @@
 package com.xuleng.taskmanager.controller;
 
 import com.xuleng.taskmanager.common.ApiResponse;
+import com.xuleng.taskmanager.dto.CreateTaskRequest;
+import com.xuleng.taskmanager.dto.TaskResponse;
 import com.xuleng.taskmanager.entity.Task;
 import com.xuleng.taskmanager.entity.TaskStatus;
 import com.xuleng.taskmanager.service.TaskService;
@@ -21,15 +23,16 @@ public class TaskController {
     }
 
     @PostMapping
-    public ApiResponse<Task> createTask(@Valid @RequestBody Task task){
+        public ApiResponse<TaskResponse> createTask(@Valid @RequestBody CreateTaskRequest request){
         //return taskService.createTask(task);
-        return new ApiResponse<>(200,"success",taskService.createTask(task));
+        return new ApiResponse<>(200,"success",taskService.createTask(request));
     }
 
     @GetMapping
-    public ApiResponse<List<Task>> getAllTasks (){
+    public ApiResponse<List<TaskResponse>> getAllTasks (){
         //return taskService.getAllTask();
-        return new ApiResponse<>(200,"success",taskService.getAllTask());
+        List<TaskResponse> list = taskService.getAllTask();
+        return new ApiResponse<>(200,"success",list);
     }
 
     @GetMapping("/{id}")
